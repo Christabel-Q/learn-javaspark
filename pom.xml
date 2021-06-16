@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>LearnJavaSpark</artifactId>
-    <version>1.5.2-SNAPSHOT</version>
+    <version>1.7.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -24,6 +24,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.example</groupId>
+                <artifactId>LearnJavaSpark</artifactId>
+                <version>2.4.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -35,26 +40,74 @@
 
         <dependency> <!-- Spark dependency -->
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.12</artifactId>
-            <version>2.4.1</version>
+            <artifactId>spark-core_2.12</artifactId>
+            <version>3.1.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
             </exclusions>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.12</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.logback-extensions</groupId>
+            <artifactId>logback-ext-loggly</artifactId>
+            <version>0.1.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-scala -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-scala_2.12</artifactId>
+            <version>2.9.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.9.10</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.6.7</version>
+            <version>2.9.10</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.6.7</version>
+            <version>2.9.10</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
@@ -94,6 +147,20 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.fasterxml.jackson</pattern>
+                                    <shadedPattern>noc.com.fasterxml.jackson</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.slf4j</pattern>
+                                    <shadedPattern>com.shaded.slf4j</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.guava</pattern>
+                                    <shadedPattern>noc.com.google.guava</shadedPattern>
+                                </relocation>
+                            </relocations>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>LearnJavaSpark</mainClass>

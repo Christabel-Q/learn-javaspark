@@ -27,6 +27,7 @@ public class LearnJavaSpark {
                 .getOrCreate();
         sparkContext = JavaSparkContext.fromSparkContext(sparkSession.sparkContext());
 //        sparkContext.setLogLevel("Error");
+        System.out.print(sparkSession.toString());
 
         // perform on local machine
 //        System.out.println("Performing read CSV and write Parquet on local machine");
